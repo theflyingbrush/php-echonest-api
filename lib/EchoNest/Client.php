@@ -70,6 +70,16 @@ class EchoNest_Client
     }
 
     /**
+    *
+    * @param OAuthConsumer     $consumer       An OAuthConsumer with key and secret
+    * @return EchoNestApi                       fluent interface
+    **/
+    public function setOauthConsumer($consumer){
+        $this->getHttpClient()->setOption('oauth_consumer', $consumer);
+        return $this;
+    }
+
+    /**
      * Call any route, GET method
      * Ex: $api->get('repos/show/my-username/my-repo')
      *

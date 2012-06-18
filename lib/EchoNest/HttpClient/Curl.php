@@ -29,22 +29,55 @@ class EchoNest_HttpClient_Curl extends EchoNest_HttpClient
 
         $curlOptions = array();
 
-        if (!empty($parameters))
-        {
-            $queryString = utf8_encode($this->buildQuery($parameters));
+        if(isset($options["signed"]) && $options["signed"] == true){
 
-            if('GET' === $httpMethod)
-            {
-                $url .= '?' . $queryString;
+            // attempt to sign this request
+            // we need api_key and oauth_consumer credentials to do this. Check and throw exception if not found
+            if(!isset($this->options["oauth_consumer"])){
+                throw new EchoNest_HttpClient_Exception("Missing API key", 401);
             }
-            else
-            {
-                $curlOptions += array(
-                    CURLOPT_POST        => true,
-                    CURLOPT_POSTFIELDS  => $queryString
-                );
+
+            if(!isset($this->options["api_key"])){
+                throw new EchoNest_HttpClient_Exception("Missing OAuth Consumer", 401);
             }
+
+            $consumer = $this->options["oauth_consumer"];
+
+            /*var_dump($parameters);
+            var_dump($url);
+            var_dump($consumer);*/
+
+            $request = OAuthRequest::from_consumer_and_token($consumer, null, $httpMethod, $url, $parameters);
+            $request->sign_request($this->options["sha1_method"], $consumer, null);
+
+            //var_dump($request->get_parameters());
+            //var_dump($request->get_signable_parameters());
+
+            $url = $request->to_url();
+            //var_dump($url);
+
+        } else {
+
+            if (!empty($parameters))
+            {
+                $queryString = utf8_encode($this->buildQuery($parameters));
+
+                if('GET' === $httpMethod)
+                {
+                    $url .= '?' . $queryString;
+                }
+                else
+                {
+                    $curlOptions += array(
+                        CURLOPT_POST        => true,
+                        CURLOPT_POSTFIELDS  => $queryString
+                    );
+                }
+            }
+
         }
+
+        
 
         $this->debug('send '.$httpMethod.' request: '.$url);
 
@@ -100,7 +133,7 @@ class EchoNest_HttpClient_Curl extends EchoNest_HttpClient
     }
 
     protected function debug($message)
-    {
+    {   
         if($this->options['debug'])
         {
             print $message."\n";
