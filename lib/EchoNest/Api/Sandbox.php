@@ -19,6 +19,17 @@ class EchoNest_Api_Sandbox extends EchoNest_Api {
     return $this->returnResponse($response);
   }
 
+  public function access($id)
+  {
+  	$response = $this->client->get('sandbox/access', array(
+  		'id'	 => $id,
+  		'sandbox' => $this->options["sandbox"] 
+  	), array("signed" => true));
+
+    return $this->returnResponse($response);
+  }
+
+
 }
 
 ?>
