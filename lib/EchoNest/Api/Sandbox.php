@@ -10,14 +10,24 @@
 
 class EchoNest_Api_Sandbox extends EchoNest_Api {
 
-  public function getList()
+  /**
+  * Get a list of assets available from the given sandbox.
+  * http://developer.echonest.com/docs/v4/sandbox.html#list
+  *
+  * @param   integer $results      the number of results desired (0 < $results < 100)
+  * @param   integer $start        the desired index of the first result returned
+  * @return  array                 list of audio sandbox assets found
+  */
+  public function getList($params)
   {
-    $response = $this->client->get('sandbox/list', array(
-      'sandbox'         => $this->options["sandbox"]
-    ));
+
+    $options = array_merge($params, array("sandbox" => $this->options["sandbox"]));
+
+    $response = $this->client->get('sandbox/list', $options);
 
     return $this->returnResponse($response);
   }
+
 
   public function access($id)
   {
