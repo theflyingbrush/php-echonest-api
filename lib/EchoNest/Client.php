@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Simple PHP EchoNest API
  *
@@ -10,7 +9,11 @@
  *
  * Website: http://EchoNest.com/ornicar/php-EchoNest-api
  * Tickets: http://EchoNest.com/ornicar/php-EchoNest-api/issues
+ *
  */
+
+require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "OAuth" . DIRECTORY_SEPARATOR . "OAuth.php");
+
 class EchoNest_Client
 {
     /**
@@ -71,11 +74,24 @@ class EchoNest_Client
 
     /**
     *
-    * @param OAuthConsumer     $consumer       An OAuthConsumer with key and secret
+    * @param OAuthConsumer     $consumer       An OAuthConsumer Object presupplied with credentials
     * @return EchoNestApi                       fluent interface
     **/
     public function setOauthConsumer($consumer){
         $this->getHttpClient()->setOption('oauth_consumer', $consumer);
+        return $this;
+    }
+
+    /**
+    *
+    * @param    String     $consumer_key        An OAuth Consumer key
+    * @param    String     $consumer_secret     An OAuth Consumer secret
+    * @return   EchoNestApi                       fluent interface
+    **/
+    public function setOauthCredentials($consumer_key, $consumer_secret){
+        $consumer = new OAuthConsumer($consumer_key, $consumer_secret);
+        $this->getHttpClient()->setOption("sha1_method", new OAuthSignatureMethod_HMAC_SHA1());
+        $this->setOAuthConsumer($consumer);
         return $this;
     }
 
