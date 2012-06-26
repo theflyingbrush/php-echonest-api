@@ -43,15 +43,8 @@ class EchoNest_HttpClient_Curl extends EchoNest_HttpClient
 
             $consumer = $this->options["oauth_consumer"];
 
-            /*var_dump($parameters);
-            var_dump($url);
-            var_dump($consumer);*/
-
             $request = OAuthRequest::from_consumer_and_token($consumer, null, $httpMethod, $url, $parameters);
             $request->sign_request($this->options["sha1_method"], $consumer, null);
-
-            //var_dump($request->get_parameters());
-            //var_dump($request->get_signable_parameters());
 
             $url = $request->to_url();
             //var_dump($url);
