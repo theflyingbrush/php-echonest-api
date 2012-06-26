@@ -157,6 +157,29 @@ set the *raw* option to `true` for your API.
     
 If you think this is dumb, let me know and I will consider making `raw` the default.
 
+## Sandbox API
+
+To instantiate the Sandbox API without access rights:
+
+    $options = array("sandbox" => $sandbox_name);
+    $sandbox_api = $echonest->getSandboxApi( $options );
+
+To list the contents of the sandbox:
+
+    $options = array( "results" => RESULTS_PER_PAGE,
+                    "start" => $start * RESULTS_PER_PAGE);
+    $assets = $sandbox->getList($options);
+
+If you want to access assets, then you must provide your OAuth credentials (one time only) to the client like so:
+
+    $echonest->setOAuthCredentials($consumer_key, $shared_secret );
+    $options = array("sandbox" => $sandbox_name);
+    $sandbox_api = $echonest->getSandboxApi( $options );
+
+You can then get access information:
+
+    $sandbox->access($asset_id);
+
 
 # To Do
 
