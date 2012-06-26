@@ -178,7 +178,7 @@ If you want to access assets, then you must provide your OAuth credentials (one 
 
 You can then get access information:
 
-    $sandbox->access($asset_id);
+    $asset = $sandbox->access($asset_id);
 
 
 # To Do
