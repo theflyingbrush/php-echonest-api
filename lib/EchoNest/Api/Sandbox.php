@@ -18,7 +18,7 @@ class EchoNest_Api_Sandbox extends EchoNest_Api {
   * @param   integer $start        the desired index of the first result returned
   * @return  array                 list of audio sandbox assets found
   */
-  public function getList($params)
+  public function getList($params = array())
   {
 
     $options = array_merge($params, array("sandbox" => $this->options["sandbox"]));
